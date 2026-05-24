@@ -12,7 +12,13 @@ The project demonstrates the future of AI-to-AI financial interactions through s
 
 ## Demo and Article
 
-- YouTube Demo: https://www.youtube.com/watch?v=756sYJhqdgo
+## YouTube Demo
+
+[![Watch the demo](https://img.youtube.com/vi/756sYJhqdgo/maxresdefault.jpg)](https://www.youtube.com/watch?v=756sYJhqdgo)
+
+
+## Medium Article
+
 - Medium Article: https://medium.com/@sudamgd/the-future-of-banking-when-your-personal-ai-negotiates-loans-for-you-f2da6605718b
 
 ## Key Features
