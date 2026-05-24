@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bank vs Personal AI</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    .chat-box {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1em;
+      background: #f9f9f9;
+      border-bottom: 1px solid #ccc;
+    }
+    .message {
+      margin-bottom: 1em;
+    }
+    .you {
+      color: green;
+      font-weight: bold;
+    }
+    .bank {
+      color: navy;
+      font-weight: bold;
+    }
+    .system {
+      color: darkorange;
+      font-weight: bold;
+    }
+    .chat-controls {
+      padding: 1em;
+      background: #fff;
+      border-top: 1px solid #ccc;
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      padding: 0.5em 1em;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2 style="padding: 1em;">💬 Bank AI vs Personal AI Negotiation</h2>
+  <div class="chat-box" id="chatBox"></div>
+  <div class="chat-controls">
+    <button onclick="startChat()">▶️ Start</button>
+    <button onclick="stopChat()">⏹️ Stop</button>
+    <button onclick="restartChat()">🔄 Restart</button>
+    <button onclick="saveChat()">💾 Save</button>
+  </div>
+
+  <script>
+    let polling = null;
+
+    function updateChat() {
+      fetch('/chat')
+        .then(res => res.json())
+        .then(data => {
+          const chatBox = document.getElementById('chatBox');
+          chatBox.innerHTML = '';
+          data.conversation.forEach(msg => {
+            const div = document.createElement('div');
+            div.className = 'message';
+            if (msg.sender === 'system') div.className += ' system';
+            div.innerHTML = `<span class="${msg.sender}">${msg.sender === 'you' ? 'You' : (msg.sender === 'bank' ? 'Bank' : 'System')}:</span> ${msg.message}`;
+            chatBox.appendChild(div);
+          });
+          chatBox.scrollTop = chatBox.scrollHeight;
+        });
+    }
+
+    function startChat() {
+      fetch('/start', { method: 'POST' });
+      updateChat();
+      if (!polling) {
+        polling = setInterval(updateChat, 3000);
+      }
+    }
+
+    function stopChat() {
+      fetch('/stop', { method: 'POST' });
+      clearInterval(polling);
+      polling = null;
+    }
+
+    function restartChat() {
+      fetch('/restart', { method: 'POST' });
+      document.getElementById('chatBox').innerHTML = '';
+      clearInterval(polling);
+      polling = null;
+    }
+
+    function saveChat() {
+      fetch('/save', { method: 'POST' })
+        .then(() => alert("Chat saved to 'chat_history.json'"));
+    }
+  </script>
+
+</body>
+</html>
